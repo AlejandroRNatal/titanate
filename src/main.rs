@@ -16,7 +16,7 @@ use titan::{print, println};
 #[no_mangle]
 fn panic(_info: &PanicInfo) -> ! {
     print!("{}", _info);
-    loop {}
+    titan::hlt_loop();
 }
 
 #[cfg(test)]
@@ -35,15 +35,15 @@ pub extern "C" fn _start() -> ! {
     titan::init(); 
 
     //x86_64::instructions::interrupts::int3(); 
-    unsafe {
-        *(0xdeadbeef as *mut u64) = 69; //lil hacker ref deadbeef;
-    };
+    //unsafe {
+    //    *(0xdeadbeef as *mut u64) = 69; //lil hacker ref deadbeef;
+    //};
 
     #[cfg(test)]
     test_main();
 
-
-    loop {}
+    println!("[MAIN] No Crash after interrupt handler");
+    titan::hlt_loop();
 } 
 
 
