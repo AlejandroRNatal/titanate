@@ -4,12 +4,11 @@
 #![feature(custom_test_frameworks)]
 #![test_runner(crate::test_runner)]
 #![reexport_test_harness_main = "test_main"]
-
 use core::intrinsics;
 use core::panic::PanicInfo;
 
 use titan::{print, println};
-
+use bootloader::{BootInfo, entry_point};
 
 #[cfg(not(test))]
 #[panic_handler]
@@ -26,9 +25,17 @@ fn panic(_info: &PanicInfo) -> ! {
     titan::test_panic_handler(_info)
 }
 
+entry_point!(kernel_main);
+
+fn kernel_main(boot_info:&'static BootInfo) -> ! {
+       titan::init();    
+       #[cfg(test)]     
+       test_main(); 
+        titan::hlt_loop();
+}
 
 #[no_mangle]
-pub extern "C" fn _start() -> ! {
+pub extern "C" fn _start(boot_info: &'static BootInfo) -> ! {
     
     println!("Hello from a raw Print Macro!");
     

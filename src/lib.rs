@@ -7,11 +7,17 @@
 
 use core::panic::PanicInfo;
 
+#[cfg(test)]
+use bootloader::{entry_poin, BootInfo};
+
+#[cfg(test)]
+entry_point!(test_kernel_main);
+
 pub mod serial;
 pub mod vga_buffer;
 pub mod interrupts;
 pub mod gdt;
-
+pub mod memory;
 
 pub fn init() {
     gdt::init();
@@ -85,3 +91,11 @@ fn panic(info: &PanicInfo) -> ! {
     test_panic_handler(info)
 }
 
+/// Entry point for `cargo test`
+#[cfg(test)]
+fn test_kernel_main(_boot_info: &'static BootInfo) -> ! {
+    // like before
+    init();
+    test_main();
+    hlt_loop();
+}
