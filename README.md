@@ -1,6 +1,10 @@
 # titanate
 ## This is a pet Kernel written in Rust developed using Tim McNamara's Rust In Action book.
 
+## References
+- https://os.phil-opp.com/
+- Tim  McNamara's Rust In Action
+
 # Dependencies
 
 ## Required Nightly Build for compiling wioth bootimage

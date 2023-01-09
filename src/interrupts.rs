@@ -1,10 +1,11 @@
-use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
+use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame, PageFaultErrorCode};
 use crate::{print, println};
 use crate::gdt;
 use lazy_static::lazy_static;
 use pic8259::ChainedPics;
 use spin;
 
+use crate::hlt_loop;
 
 pub const PIC_1_OFFSET: u8 = 32;
 pub const PIC_2_OFFSET: u8 = PIC_1_OFFSET + 8;
@@ -118,7 +119,7 @@ extern "x86-interrupt" fn page_fault_handler(
     println!("Accessed Address: {:?}", Cr2::read());
 
     println!("Error Code {:?}", error_code);
-    println!("{:?}",stack_frame)
+    println!("{:?}",stack_frame);
     hlt_loop();
 }
 
