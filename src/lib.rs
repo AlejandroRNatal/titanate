@@ -28,6 +28,8 @@ pub mod interrupts;
 pub mod gdt;
 pub mod memory;
 pub mod allocator;
+pub mod task;
+
 
 pub fn init() {
     gdt::init();

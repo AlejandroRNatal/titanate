@@ -85,9 +85,11 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(
     let mut port = Port::new(0x60);
     let scancode: u8 = unsafe { port.read() };
     
-    print!("{}", scancode);
+    crate::task::keyboard::add_scancode(scancode);
+
+    //print!("{}", scancode);
     
-    let key = match scancode {
+    /*let key = match scancode {
         0x02 => Some('1'),
         0x03 => Some('2'),
         0x04 => Some('3'),
@@ -102,7 +104,7 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(
     };
 
     if let Some(key) =  key { print!("{}", key) };
-
+    */
     unsafe {
         PICS.lock()
             .notify_end_of_interrupt(InterruptIndex::Keyboard.as_u8());

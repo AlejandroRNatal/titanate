@@ -10,6 +10,8 @@ use x86_64::VirtAddr;
 use core::panic::PanicInfo;
 
 use titan::{print, println};
+use titan::task::{Task, executor::Executor, keyboard};
+
 use bootloader::{BootInfo, entry_point};
 
 extern crate alloc;
@@ -77,7 +79,11 @@ fn kernel_main(boot_info:&'static BootInfo) -> ! {
     //println!("current reference count is {}", Rc::strong_count(&cloned_reference));
     //core::mem::drop(reference_counted);
     //println!("reference count is {} now", Rc::strong_count(&cloned_reference));
-
+    
+    let mut executor = Executor::new();
+    executor.spawn(Task::new(example_task()));
+    executor.spawn(Task::new(keyboard::print_keypresses()));
+    executor.run();
 
     #[cfg(test)]     
     test_main(); 
@@ -85,6 +91,15 @@ fn kernel_main(boot_info:&'static BootInfo) -> ! {
     println!("No crash from Heap Allocation");
     titan::hlt_loop();
 
+}
+
+async fn async_num() -> u32 {
+    42
+}
+
+async fn example_task() {
+    let num = async_num().await;
+    println!("async number: {}", num);
 }
 
 /*
